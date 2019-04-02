@@ -24,10 +24,11 @@ export class MyApp {
       { title: 'Home', component: 'HomePage' },
       { title: 'List', component: 'ListPage' },
       {title: 'Teste', component: 'TesteIonicPage'},
-      {title: 'Contate', component: 'FormContatePage'},
+      {title: 'Contato', component: 'FormContatoPage'},
       {title: 'Lista Filmes', component: 'ListaFilmesServPage'},
-      {title: 'Lista Clientes', component: 'ListaClientesServPage'},
-      {title: 'Buasca Endereco', component: 'BuascaEnderecoPage'}
+      {title: 'Lista Clientes', component: 'ClientesPage'},
+      {title: 'Lista Noticia', component: 'ListaNoticiasPage'},
+      {title: 'Busca Endereco', component: 'BuscaEnderecoPage'}
     ];
 
   }

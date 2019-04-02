@@ -1,15 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Endereco } from '../../model/endereco';
 import { EnderecoService } from '../../services/endereco.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
-/**
- * Generated class for the BuscaEnderecoPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -18,32 +11,35 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class BuscaEnderecoPage {
 
-  endereco : Endereco = new Endereco();
   formGroup : FormGroup;
+  @ViewChild('cep') cep; // <--
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public enderecoServ : EnderecoService,
-    public formBuilder : FormBuilder) { // <---
+    public formBuilder : FormBuilder) {
+
       this.formGroup = this.formBuilder.group({
-        cep: [''],
-        logradouro: [''],
-        complemento: [''],
-        bairro: [''],
-        localidade: [''],
-        uf: [''],
-        unidade: [''],
-        ibge: [''],
-        gia: ['']
+        logradouro : [''],
+        bairro : [''],
+        localidade : [''],
+        uf : ['']
       })
   }
 
-
   buscar(){
-    let cep = this.formGroup.controls['cep'].value
-    this.enderecoServ.buscaCep(cep).subscribe(response =>{
-      console.log(response);
-    })
+    this.enderecoServ.buscaCEP(this.cep.value)
+      .subscribe(response =>{
+
+        this.formGroup = this.formBuilder.group({
+          logradouro : [response['logradouro']],
+          bairro : [response['bairro']],
+          localidade : [response['localidade']],
+          uf : [response['uf']]
+        })
+
+      })
   }
+
 
 }
