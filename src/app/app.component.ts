@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   templateUrl: 'app.html'
@@ -16,19 +16,17 @@ export class MyApp {
 
   pages: Array<{title: string, component: string}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, 
+    public statusBar: StatusBar, 
+    public splashScreen: SplashScreen,
+    public firebaseauth : AngularFireAuth) {
+
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: 'HomePage' },
-      { title: 'List', component: 'ListPage' },
-      {title: 'Teste', component: 'TesteIonicPage'},
-      {title: 'Contato', component: 'FormContatoPage'},
-      {title: 'Lista Filmes', component: 'ListaFilmesServPage'},
-      {title: 'Lista Clientes', component: 'ClientesPage'},
-      {title: 'Lista Noticia', component: 'ListaNoticiasPage'},
-      {title: 'Busca Endereco', component: 'BuscaEnderecoPage'}
+      { title: 'Logoff', component: 'LogoffPage' },
     ];
 
   }
@@ -40,6 +38,20 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
+    this.firebaseauth.authState
+    .subscribe(
+      user => {
+        if (user) {
+          this.rootPage = 'InicioPage'; // página inicial (logado)
+          } else {
+            this.rootPage = 'HomePage'; // se não houver usuário
+           }
+      },
+      () => {
+        this.rootPage = 'CategoriasPage'; // página inicial (logado)
+      }
+    );
   }
 
   openPage(page) {

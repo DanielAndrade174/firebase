@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, IonicPage, AlertController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, IonicPage, AlertController, MenuController, ToastController } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'page-home',
@@ -8,38 +9,41 @@ import { NavController, IonicPage, AlertController } from 'ionic-angular';
 @IonicPage()
 export class HomePage {
 
-  nomes : any[] = [
-    { 'nome' : 'Manuel'},
-    { 'nome' : 'Ana'},
-    { 'nome' : 'Mônica'},
-    { 'nome' : 'Carlos'},
-    { 'nome' : 'Patrícia'},
+  @ViewChild('email') email;
+  @ViewChild('senha') senha;
 
-  ];
-
-  constructor(public navCtrl: NavController, 
-    public alertCtrl: AlertController) {
+  constructor(public fireAuth: AngularFireAuth,
+    public menu: MenuController,
+    public toastCtrl: ToastController) {
 
   }
 
-    olaMundo(){
-      console.log('olá Mundo Mobile!');
-      this.showAlert();
-    }
+  ionViewDidLoad(){
+    this.menu.enable(false);
+  }
 
-    irParaTeste(){
-      //this.navCtrl.push('TesteIonicPage');
-      this.navCtrl.setRoot('TesteIonicPage');
-    }
+  login() {
+    this.fireAuth.auth.signInWithEmailAndPassword(this.email.value, this.senha.value).then(() => {
+      this.presentToast("logado com sucesso!");
+    }).catch(() => {
+      this.presentToast("Usuário inválido");
+    })
+  }
 
-    showAlert() {
-      const alert = this.alertCtrl.create({
-        title: 'New Friend!',
-        subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
-        buttons: ['OK']
-      });
-      alert.present();
-    }
+  cadastrar() {
+    this.fireAuth.auth.createUserWithEmailAndPassword(this.email.value, this.senha.value).then(() => {
+      this.presentToast("Cadastrado com sucesso!");
+    }).catch(() => {
+      this.presentToast("Usuário inválido");
+    })
+  }
 
-   
+  presentToast(msg : string) {
+    const toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000
+    });
+    toast.present();
+  }
 }
+

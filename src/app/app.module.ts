@@ -2,16 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireModule } from '@angular/fire';
 
 import { MyApp } from './app.component';
 
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { FilmeService } from '../services/filme.service';
-import { ClienteService } from '../services/cliente.service';
-import { EnderecoService } from '../services/endereco.service';
-import { NoticiaService } from '../services/noticia.service';
+import { firebaseConfig } from '../config/firebase.config';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+import { ClienteService } from '../service/cliente.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,11 @@ import { NoticiaService } from '../services/noticia.service';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpClientModule
+    HttpClientModule,
+    // Configuração do servidor (firebase.config.ts)
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireStorageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -31,11 +36,8 @@ import { NoticiaService } from '../services/noticia.service';
   providers: [
     StatusBar,
     SplashScreen,
-    FilmeService,
+    AngularFireAuth,// Serviço de autenticação (Authentication)
     ClienteService,
-    EnderecoService,
-    NoticiaService,
-
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
